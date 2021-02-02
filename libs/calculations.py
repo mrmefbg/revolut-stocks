@@ -36,7 +36,7 @@ def adjust_quantity(stock_queue, sold_quantity):
         quantity_to_adjust -= data["quantity"]
 
 
-def calculate_win_loss(statements):
+def calculate_sales(statements):
     purchases = {}
     sales = []
     for statement in statements:
@@ -170,3 +170,11 @@ def calculate_dividends(statements):
                 }
 
     return [{**{"stock_symbol": stock_symbol}, **dividend} for stock_symbol, dividend in dividends.items()]
+
+
+def calculate_win_loss(sales):
+    win_loss = 0
+    for _, parser_sales in sales.items():
+        for sale in parser_sales:
+            win_loss += sale["profit"] + sale["loss"]
+    return win_loss

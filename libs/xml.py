@@ -77,9 +77,7 @@ def generate_app8_part1(app8, purchases):
             etree.SubElement(stocksenum, "count").text = str(purchase["quantity"])
             etree.SubElement(stocksenum, "acquiredate").text = str(purchase["trade_date"].strftime(NAP_DATE_FORMAT))
             etree.SubElement(stocksenum, "priceincurrency").text = str(purchase["price_usd"])
-            etree.SubElement(stocksenum, "price").text = str(
-                purchase["price"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION))
-            )
+            etree.SubElement(stocksenum, "price").text = str(purchase["price"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION)))
 
             purchase["stock_symbol"] = stock_symbol
             aggregated_data.append(purchase)
@@ -97,26 +95,27 @@ def generate_app8_part4_1(app8, dividends):
         etree.SubElement(rowenum, "country").text = "САЩ"
         etree.SubElement(rowenum, "incomecode").text = "8141"
         etree.SubElement(rowenum, "methodcode").text = "1"
-        etree.SubElement(rowenum, "sum").text = str(
-            dividend["gross_profit_amount"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION))
-        )
+        etree.SubElement(rowenum, "sum").text = str(dividend["gross_profit_amount"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION)))
         etree.SubElement(rowenum, "value").text = "0"
         etree.SubElement(rowenum, "diff").text = "0"
-        etree.SubElement(rowenum, "paidtax").text = str(
-            dividend["paid_tax_amount"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION))
-        )
+        etree.SubElement(rowenum, "paidtax").text = str(dividend["paid_tax_amount"].quantize(decimal.Decimal(NAP_DIGIT_PRECISION)))
         etree.SubElement(rowenum, "permitedtax").text = "0"
         etree.SubElement(rowenum, "tax").text = "0"
         etree.SubElement(rowenum, "owetax").text = "0"
 
 
-def export_to_xml(filename, dividends, sales=None, purchases=None):
+def export_to_xml(filename, dividends, parsers_calculations):
     aggregated_data = None
 
     dec50 = etree.Element("dec50")
 
     app8 = etree.SubElement(dec50, "app8")
     generate_app8_part4_1(app8, dividends)
+
+    sales = None
+    purchases = None
+    if parsers_calculations is not None:
+        sales, purchases = parsers_calculations
 
     if sales is not None:
         generate_app5_table2(dec50, sales)
