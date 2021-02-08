@@ -56,7 +56,6 @@ class Parser(StatementFilesParser):
         return begin_index + 1, end_index
 
     def extract_symbol(self, symbol_description):
-        print(symbol_description)
         try:
             return symbol_description[0 : symbol_description.index("-") - 1]
         except ValueError:
@@ -93,6 +92,7 @@ class Parser(StatementFilesParser):
         return re.sub(r"\s{2,}", " ", company[:second_sep_index].strip())
 
     def extract_activity(self, begin_index, page_strings, num_fields):
+        logger.debug(f"Page string: {page_strings}")
         end_index, symbol_description = self.extract_symbol_description(begin_index + 4, page_strings)
         symbol = self.extract_symbol(symbol_description)
 
